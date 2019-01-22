@@ -23,6 +23,7 @@ class App extends Component {
     });
   }
   render() {
+    console.log(this.state.posts);
     return (
       <div className="App">
         <header className="App-header">
