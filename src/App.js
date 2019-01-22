@@ -1,25 +1,38 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import axios from 'axios';
 import './App.css';
+import Post from './components/post/Post';
+import Search from './components/search/Search';
 
 class App extends Component {
+  state = {
+    posts: []
+  }
+  onPostSearch = (query) => {
+    const filtered = this.originalPosts.filter(p => p.title.indexOf(query) > -1);
+    this.setState({
+      posts: filtered
+    });
+  }
+  async componentDidMount(){
+    const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
+    this.originalPosts = [...response.data];
+    console.log(this.originalPosts);
+    this.setState({
+      posts: response.data
+    });
+  }
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+          <Search onSearch={this.onPostSearch} /> 
         </header>
+        <div className="app-posts">
+        {
+          this.state.posts.map(post => <Post key={post.id} {...post} />)
+        }
+        </div>
       </div>
     );
   }
